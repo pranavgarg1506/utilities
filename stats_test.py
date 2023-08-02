@@ -12,12 +12,24 @@ class Assumptions:
         pass
     
     def plot_graph(self,data):
-        sns.distplot(data, kde = True, color ='red', bins = 30)
+        sns.displot(data, kde = True, color ='red', bins = 30)
+        plt.tight_layout()
         plt.show()
-    
-    def ac_normality_test(self):
+        
+    def basic_profiling(self):
+        a1 = self.grp1['data']
+        b1 = self.grp2['data']
+        
+        print(f"group 1 contains {len(a1)} elements in it with a mean of {round(np.mean(a1),2)}")
+        print(f"group 2 contains {len(b1)} elements in it with a mean of {round(np.mean(b1),2)}")
+        
+        print("Plotting Grpahs for all distributions.......................")
         self.plot_graph(self.grp1['data'])
         self.plot_graph(self.grp2['data'])
+        
+        
+    def ac_normality_test(self):
+        
         print("performing Normality Test..........................")
         self.grp1['normality_f_stat'],self.grp1['normality_pvalue']  = stats.shapiro(self.grp1['data'])
         print(f"for group 1 fstat value is {self.grp1['normality_f_stat']} and pvalue is {self.grp1['normality_pvalue']}")
@@ -47,6 +59,7 @@ class ParametricTests(Assumptions):
 class CheckStats(ParametricTests):
     
     def __init__(self,*args) -> None:
+        
         print("Calling stats Library to check the statistical significance of the groups.........")
         print(f"You have passed {len(args)} arguments for the analysis................")
         
@@ -56,6 +69,7 @@ class CheckStats(ParametricTests):
             self.general = {}
             self.grp1['data'] = args[0]
             self.grp2['data'] = args[1]
+            Assumptions.basic_profiling(self)
             
             t_test_type = input("\nWhich Test do you want to perform?\nSelect 'A' for independent t test or 'B' for paired t test\n")
             
